@@ -199,10 +199,20 @@ def evaluate_model(model, known_loader, unknown_loader, device):
         known_targets
     )
 
+def git_push_progress(output_dir, commit_msg):
+    try:
+        os.system(f"git add {output_dir}/*.json {output_dir}/*.jsonl {output_dir}/*_best.pth 2>/dev/null")
+        os.system(f'git commit -m "{commit_msg}" 2>/dev/null')
+        ret = os.system("git push origin main 2>/dev/null")
+        if ret == 0:
+            print(f"[Auto-Push] Successfully pushed to GitHub: {commit_msg}", flush=True)
+    except Exception as e:
+        print(f"[Auto-Push Warning] Could not push to GitHub: {e}", flush=True)
+
 # ---------------------------------------------------------------------------
 # Training Pipeline
 # ---------------------------------------------------------------------------
-def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device):
+def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, auto_push=False):
     print(f"\n========================================================", flush=True)
     print(f" Dataset: {dataset_name} | Method: {method} | Epochs: {epochs}", flush=True)
     print(f"========================================================", flush=True)
@@ -383,6 +393,9 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
             lf.flush()
             print(f"--> Epoch {epoch:03d}/{epochs:03d} [{elapsed:.1f}s] Loss: {train_loss:.4f} | Acc: {metrics['Accuracy']:.2f}% | AUROC: {metrics['AUROC']:.2f}% | OSCR: {metrics['OSCR']:.2f}% | TNR@95: {metrics['TNR@95']:.2f}% (Best AUROC: {best_auroc:.2f}%)", flush=True)
 
+            if auto_push and (epoch % 10 == 0):
+                git_push_progress(output_dir, f"chore: progress {dataset_name} [{method}] epoch {epoch} (AUROC {metrics['AUROC']}%)")
+
     # Final evaluation with best checkpoint
     best_ckpt = Path(output_dir) / f"{dataset_name}_{method}_best.pth"
     if best_ckpt.exists():
@@ -394,6 +407,10 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
 
     print(f"\nFinal Best Results for {dataset_name} [{method}]:", flush=True)
     print(json.dumps(final_metrics, indent=2), flush=True)
+
+    if auto_push:
+        git_push_progress(output_dir, f"chore: complete {dataset_name} [{method}] - AUROC {final_metrics['AUROC']}%")
+
     return final_metrics
 
 # ---------------------------------------------------------------------------
@@ -410,6 +427,7 @@ def main():
     parser.add_argument("--lr", type=float, default=0.1, help="Learning rate")
     parser.add_argument("--data-root", type=str, default="./data")
     parser.add_argument("--output-dir", type=str, default="./backmix_results")
+    parser.add_argument("--auto-push", action="store_true", help="Auto push progress and results to git")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
@@ -428,7 +446,8 @@ def main():
                 lr=args.lr,
                 data_root=args.data_root,
                 output_dir=args.output_dir,
-                device=device
+                device=device,
+                auto_push=args.auto_push
             )
             summary_results[ds][method] = res
 
@@ -436,6 +455,9 @@ def main():
     summary_path = Path(args.output_dir) / "all_experiments_summary.json"
     with open(summary_path, "w") as sf:
         json.dump(summary_results, sf, indent=2)
+
+    if args.auto_push:
+        git_push_progress(args.output_dir, "chore: grand summary of all experiments complete")
 
     print("\n========================================================")
     print("           GRAND SUMMARY OF ALL EXPERIMENTS             ")
