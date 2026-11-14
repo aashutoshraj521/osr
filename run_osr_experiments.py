@@ -199,10 +199,48 @@ def evaluate_model(model, known_loader, unknown_loader, device):
         known_targets
     )
 
+def get_device_and_backend():
+    # Try TPU via torch_xla first
+    try:
+        import torch_xla
+        import torch_xla.core.xla_model as xm
+        device = xm.xla_device()
+        print(f"[Device] Using TPU device: {device}", flush=True)
+        return device, "tpu", xm
+    except Exception:
+        pass
+
+    # Try NVIDIA CUDA GPU next
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        print(f"[Device] Using CUDA GPU: {torch.cuda.get_device_name(0)}", flush=True)
+        return device, "cuda", None
+
+    # Fallback to multi-core CPU
+    device = torch.device("cpu")
+    print("[Device] Using CPU", flush=True)
+    return device, "cpu", None
+
+def save_model_checkpoint(state, path, backend, xm):
+    if backend == "tpu" and xm is not None:
+        xm.save(state, str(path))
+    else:
+        torch.save(state, str(path))
+
+def git_push_progress(output_dir, commit_msg):
+    try:
+        os.system(f"git add {output_dir}/*.json {output_dir}/*.jsonl {output_dir}/*_best.pth 2>/dev/null")
+        os.system(f'git commit -m "{commit_msg}" 2>/dev/null')
+        ret = os.system("git push origin main 2>/dev/null")
+        if ret == 0:
+            print(f"[Auto-Push] Successfully pushed to GitHub: {commit_msg}", flush=True)
+    except Exception as e:
+        print(f"[Auto-Push Warning] Could not push to GitHub: {e}", flush=True)
+
 # ---------------------------------------------------------------------------
 # Training Pipeline
 # ---------------------------------------------------------------------------
-def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device):
+def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False):
     print(f"\n========================================================", flush=True)
     print(f" Dataset: {dataset_name} | Method: {method} | Epochs: {epochs}", flush=True)
     print(f"========================================================", flush=True)
@@ -287,9 +325,10 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
 
         train_ds = StandardAugDataset(train_base)
 
-    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=2, pin_memory=False)
-    known_eval_loader = DataLoader(known_test_ds, batch_size=batch_size, shuffle=False, num_workers=2)
-    unknown_eval_loader = DataLoader(unknown_test_ds, batch_size=batch_size, shuffle=False, num_workers=2)
+    use_cuda = (device.type == "cuda")
+    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=2, pin_memory=use_cuda)
+    known_eval_loader = DataLoader(known_test_ds, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=use_cuda)
+    unknown_eval_loader = DataLoader(unknown_test_ds, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=use_cuda)
 
     # 2. Model, Optimizer, Loss, Scheduler
     model = ResNet18_OSR(num_classes=num_classes).to(device)
@@ -336,7 +375,12 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
                 logits, cam = model(inputs)
                 loss = criterion(logits, labels)
                 loss.backward()
-                optimizer.step()
+
+                if backend == "tpu" and xm is not None:
+                    xm.optimizer_step(optimizer)
+                    xm.mark_step()
+                else:
+                    optimizer.step()
 
                 # For BackMix: update CAM segmentation bank with network foreground estimation
                 if method.lower() == "backmix":
@@ -360,17 +404,17 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
             if metrics["AUROC"] > best_auroc:
                 best_auroc = metrics["AUROC"]
                 best_metrics = metrics.copy()
-                torch.save(model.state_dict(), Path(output_dir) / f"{dataset_name}_{method}_best.pth")
+                save_model_checkpoint(model.state_dict(), Path(output_dir) / f"{dataset_name}_{method}_best.pth", backend, xm)
 
             # Save checkpoint for resume
-            torch.save({
+            save_model_checkpoint({
                 "epoch": epoch,
                 "model_state": model.state_dict(),
                 "optimizer_state": optimizer.state_dict(),
                 "scheduler_state": scheduler.state_dict(),
                 "best_auroc": best_auroc,
                 "best_metrics": best_metrics
-            }, latest_ckpt)
+            }, latest_ckpt, backend, xm)
 
             log_entry = {
                 "epoch": epoch,
@@ -381,6 +425,9 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
             lf.write(json.dumps(log_entry) + "\n")
             lf.flush()
             print(f"--> Epoch {epoch:03d}/{epochs:03d} [{elapsed:.1f}s] Loss: {train_loss:.4f} | Acc: {metrics['Accuracy']:.2f}% | AUROC: {metrics['AUROC']:.2f}% | OSCR: {metrics['OSCR']:.2f}% | TNR@95: {metrics['TNR@95']:.2f}% (Best AUROC: {best_auroc:.2f}%)", flush=True)
+
+            if auto_push and (epoch % 10 == 0):
+                git_push_progress(output_dir, f"chore: progress {dataset_name} [{method}] epoch {epoch} (AUROC {metrics['AUROC']}%)")
 
     # Final evaluation with best checkpoint
     best_ckpt = Path(output_dir) / f"{dataset_name}_{method}_best.pth"
@@ -393,6 +440,10 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
 
     print(f"\nFinal Best Results for {dataset_name} [{method}]:", flush=True)
     print(json.dumps(final_metrics, indent=2), flush=True)
+
+    if auto_push:
+        git_push_progress(output_dir, f"chore: complete {dataset_name} [{method}] - AUROC {final_metrics['AUROC']}%")
+
     return final_metrics
 
 # ---------------------------------------------------------------------------
@@ -407,13 +458,14 @@ def main():
     parser.add_argument("--epochs", type=int, default=100, help="Training epochs")
     parser.add_argument("--batch-size", type=int, default=128, help="Batch size")
     parser.add_argument("--lr", type=float, default=0.1, help="Learning rate")
-    parser.add_argument("--data-root", type=str, default="/home/aashu/Thesis/osr/data")
+    parser.add_argument("--data-root", type=str, default="./data")
     parser.add_argument("--output-dir", type=str, default="./backmix_results")
+    parser.add_argument("--auto-push", action="store_true", help="Auto push progress and results to git")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Running on device: {device} | Output directory: {args.output_dir}")
+    device, backend, xm = get_device_and_backend()
+    print(f"Running on device: {device} (backend: {backend}) | Output directory: {args.output_dir}", flush=True)
 
     summary_results = {}
     for ds in args.datasets:
@@ -427,7 +479,10 @@ def main():
                 lr=args.lr,
                 data_root=args.data_root,
                 output_dir=args.output_dir,
-                device=device
+                device=device,
+                backend=backend,
+                xm=xm,
+                auto_push=args.auto_push
             )
             summary_results[ds][method] = res
 
@@ -435,6 +490,9 @@ def main():
     summary_path = Path(args.output_dir) / "all_experiments_summary.json"
     with open(summary_path, "w") as sf:
         json.dump(summary_results, sf, indent=2)
+
+    if args.auto_push:
+        git_push_progress(args.output_dir, "chore: grand summary of all experiments complete")
 
     print("\n========================================================")
     print("           GRAND SUMMARY OF ALL EXPERIMENTS             ")
