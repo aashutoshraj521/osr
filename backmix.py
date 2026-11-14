@@ -26,7 +26,8 @@ class BMixDataset(data.Dataset):
     
     
     def init_segbank(self, h, w):
-        self.seg_bank = torch.ones([len(self.ds), h, w])*0.5
+        self.seg_bank = torch.ones([len(self.ds), h, w]) * 0.5
+        self.seg_bank.share_memory_()
 
 
     def soft_seg(self, idx, seg_mask):
@@ -37,7 +38,9 @@ class BMixDataset(data.Dataset):
     
     
     def mask_random(self, defined_size): 
-        h, w = defined_size[1], defined_size[0]
+        h, w = int(defined_size[1]), int(defined_size[0])
+        h = max(1, min(31, h))
+        w = max(1, min(31, w))
         bbox_y1 = np.random.randint(0, 32-h)
         bbox_x1 = np.random.randint(0, 32-w)
         bbox_y2 = min(32, bbox_y1+h)
@@ -46,7 +49,13 @@ class BMixDataset(data.Dataset):
 
 
     def __getitem__(self, idx):        
-        img, lb, _ = self.ds[idx]
+        retr = self.ds[idx]
+        if isinstance(retr, tuple) and len(retr) == 3:
+            img, lb, _ = retr
+        elif isinstance(retr, tuple) and len(retr) == 2:
+            img, lb = retr
+        else:
+            raise ValueError(f'Unexpected dataset __getitem__ return: {retr}')
         img = self.resize_crop(img)
         
         def mask_highestK(seg_map, ratio, is_rand = False, interpolate = True):
@@ -75,7 +84,16 @@ class BMixDataset(data.Dataset):
         bbox_x1, bbox_x2, bbox_y1, bbox_y2 = self.mask_random((0.25*32, 0.25*32))
         
         aux_idx = np.random.randint(len(self.ds))
-        aux_img, _, _ = self.ds[aux_idx]
+        retr = self.ds[aux_idx]
+        if isinstance(retr, (list, tuple)):
+            if len(retr) == 3:
+                aux_img, _, _ = retr
+            elif len(retr) == 2:
+                aux_img, _ = retr
+            else:
+                raise ValueError(f'Unexpected dataset __getitem__ return for aux: {retr}')
+        else:
+            raise ValueError(f'Unexpected dataset __getitem__ return type for aux: {type(retr)}')
         aux_mask = mask_highestK(self.seg_bank[aux_idx], 0.25)
         aux_img = self.totensor(self.resize_crop(aux_img))
         aux_img *= 1-aux_mask
