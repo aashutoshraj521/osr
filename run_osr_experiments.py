@@ -287,9 +287,10 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
 
         train_ds = StandardAugDataset(train_base)
 
-    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=2, pin_memory=False)
-    known_eval_loader = DataLoader(known_test_ds, batch_size=batch_size, shuffle=False, num_workers=2)
-    unknown_eval_loader = DataLoader(unknown_test_ds, batch_size=batch_size, shuffle=False, num_workers=2)
+    use_cuda = (device.type == "cuda")
+    train_loader = DataLoader(train_ds, batch_size=batch_size, shuffle=True, num_workers=2, pin_memory=use_cuda)
+    known_eval_loader = DataLoader(known_test_ds, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=use_cuda)
+    unknown_eval_loader = DataLoader(unknown_test_ds, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=use_cuda)
 
     # 2. Model, Optimizer, Loss, Scheduler
     model = ResNet18_OSR(num_classes=num_classes).to(device)
@@ -407,7 +408,7 @@ def main():
     parser.add_argument("--epochs", type=int, default=100, help="Training epochs")
     parser.add_argument("--batch-size", type=int, default=128, help="Batch size")
     parser.add_argument("--lr", type=float, default=0.1, help="Learning rate")
-    parser.add_argument("--data-root", type=str, default="/home/aashu/Thesis/osr/data")
+    parser.add_argument("--data-root", type=str, default="./data")
     parser.add_argument("--output-dir", type=str, default="./backmix_results")
     args = parser.parse_args()
 
