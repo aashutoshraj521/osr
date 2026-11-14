@@ -229,11 +229,15 @@ def save_model_checkpoint(state, path, backend, xm):
 
 def git_push_progress(output_dir, commit_msg):
     try:
-        os.system(f"git add {output_dir}/*.json {output_dir}/*.jsonl {output_dir}/*_best.pth 2>/dev/null")
+        os.system(f"git add {output_dir}/*.json {output_dir}/*.jsonl {output_dir}/*_best.pth {output_dir}/*_latest.pth 2>/dev/null")
         os.system(f'git commit -m "{commit_msg}" 2>/dev/null')
+        # Pull before push to handle any concurrent commits
+        os.system("git pull --rebase origin main 2>/dev/null")
         ret = os.system("git push origin main 2>/dev/null")
         if ret == 0:
             print(f"[Auto-Push] Successfully pushed to GitHub: {commit_msg}", flush=True)
+        else:
+            print(f"[Auto-Push Notice] Push returned non-zero code {ret} (check git remote / token)", flush=True)
     except Exception as e:
         print(f"[Auto-Push Warning] Could not push to GitHub: {e}", flush=True)
 
@@ -331,10 +335,20 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
     unknown_eval_loader = DataLoader(unknown_test_ds, batch_size=batch_size, shuffle=False, num_workers=2, pin_memory=use_cuda)
 
     # 2. Model, Optimizer, Loss, Scheduler
-    model = ResNet18_OSR(num_classes=num_classes).to(device)
+    base_model = ResNet18_OSR(num_classes=num_classes)
+    if device.type == "cuda" and torch.cuda.device_count() > 1:
+        print(f"[Multi-GPU] Using DataParallel across {torch.cuda.device_count()} GPUs: {[torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]}", flush=True)
+        model = nn.DataParallel(base_model).to(device)
+    else:
+        model = base_model.to(device)
+
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=lr, momentum=0.9, weight_decay=5e-4, nesterov=True)
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=epochs)
+
+    # Helper to access underlying module when using DataParallel
+    def get_raw_model(m):
+        return m.module if isinstance(m, nn.DataParallel) else m
 
     # 3. Training Loop with Resume Support
     best_auroc = 0.0
@@ -346,7 +360,7 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
     if latest_ckpt.exists():
         checkpoint = torch.load(latest_ckpt, map_location=device)
         start_epoch = checkpoint["epoch"] + 1
-        model.load_state_dict(checkpoint["model_state"])
+        get_raw_model(model).load_state_dict(checkpoint["model_state"])
         optimizer.load_state_dict(checkpoint["optimizer_state"])
         scheduler.load_state_dict(checkpoint["scheduler_state"])
         best_auroc = checkpoint.get("best_auroc", 0.0)
@@ -401,15 +415,16 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
 
             # Evaluate on every epoch
             metrics = evaluate_model(model, known_eval_loader, unknown_eval_loader, device)
+            raw_state = get_raw_model(model).state_dict()
             if metrics["AUROC"] > best_auroc:
                 best_auroc = metrics["AUROC"]
                 best_metrics = metrics.copy()
-                save_model_checkpoint(model.state_dict(), Path(output_dir) / f"{dataset_name}_{method}_best.pth", backend, xm)
+                save_model_checkpoint(raw_state, Path(output_dir) / f"{dataset_name}_{method}_best.pth", backend, xm)
 
             # Save checkpoint for resume
             save_model_checkpoint({
                 "epoch": epoch,
-                "model_state": model.state_dict(),
+                "model_state": raw_state,
                 "optimizer_state": optimizer.state_dict(),
                 "scheduler_state": scheduler.state_dict(),
                 "best_auroc": best_auroc,
@@ -432,7 +447,7 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
     # Final evaluation with best checkpoint
     best_ckpt = Path(output_dir) / f"{dataset_name}_{method}_best.pth"
     if best_ckpt.exists():
-        model.load_state_dict(torch.load(best_ckpt))
+        get_raw_model(model).load_state_dict(torch.load(best_ckpt, map_location=device))
     final_metrics = evaluate_model(model, known_eval_loader, unknown_eval_loader, device)
     
     with open(Path(output_dir) / f"{dataset_name}_{method}_final_metrics.json", "w") as jf:
