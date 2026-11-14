@@ -8,3 +8,13 @@
 {"epoch": 8, "train_loss": 1.03, "epoch_time_sec": 45.5, "Accuracy": 53.06, "AUROC": 57.42, "TNR@95": 4.7, "OSCR": 36.27, "AUIN": 79.52, "AUOUT": 30.67}
 {"epoch": 9, "train_loss": 0.5209, "epoch_time_sec": 46.0, "Accuracy": 86.48, "AUROC": 74.01, "TNR@95": 14.81, "OSCR": 69.18, "AUIN": 88.11, "AUOUT": 46.49}
 {"epoch": 10, "train_loss": 0.3729, "epoch_time_sec": 45.4, "Accuracy": 58.19, "AUROC": 52.36, "TNR@95": 5.46, "OSCR": 37.12, "AUIN": 75.85, "AUOUT": 28.6}
+{"epoch": 11, "train_loss": 0.3502, "epoch_time_sec": 45.7, "Accuracy": 66.34, "AUROC": 58.96, "TNR@95": 5.59, "OSCR": 45.83, "AUIN": 79.35, "AUOUT": 32.17}
+{"epoch": 12, "train_loss": 0.3339, "epoch_time_sec": 45.2, "Accuracy": 84.06, "AUROC": 64.73, "TNR@95": 10.23, "OSCR": 58.98, "AUIN": 79.86, "AUOUT": 39.18}
+{"epoch": 13, "train_loss": 0.2887, "epoch_time_sec": 45.4, "Accuracy": 86.7, "AUROC": 67.98, "TNR@95": 10.65, "OSCR": 63.35, "AUIN": 84.42, "AUOUT": 40.83}
+{"epoch": 14, "train_loss": 0.272, "epoch_time_sec": 45.4, "Accuracy": 91.69, "AUROC": 82.81, "TNR@95": 23.56, "OSCR": 79.47, "AUIN": 93.11, "AUOUT": 59.11}
+{"epoch": 15, "train_loss": 0.2593, "epoch_time_sec": 45.4, "Accuracy": 76.45, "AUROC": 72.45, "TNR@95": 11.76, "OSCR": 61.57, "AUIN": 88.36, "AUOUT": 43.65}
+{"epoch": 16, "train_loss": 0.2721, "epoch_time_sec": 45.6, "Accuracy": 91.69, "AUROC": 78.71, "TNR@95": 17.49, "OSCR": 75.97, "AUIN": 90.95, "AUOUT": 51.77}
+{"epoch": 17, "train_loss": 0.2427, "epoch_time_sec": 45.5, "Accuracy": 46.36, "AUROC": 46.58, "TNR@95": 4.15, "OSCR": 23.04, "AUIN": 70.8, "AUOUT": 26.0}
+{"epoch": 18, "train_loss": 0.2928, "epoch_time_sec": 45.6, "Accuracy": 93.04, "AUROC": 84.17, "TNR@95": 22.84, "OSCR": 81.37, "AUIN": 93.9, "AUOUT": 59.72}
+{"epoch": 19, "train_loss": 0.2468, "epoch_time_sec": 45.7, "Accuracy": 88.34, "AUROC": 75.98, "TNR@95": 15.09, "OSCR": 71.78, "AUIN": 89.86, "AUOUT": 48.36}
+{"epoch": 20, "train_loss": 0.2499, "epoch_time_sec": 46.3, "Accuracy": 95.04, "AUROC": 87.61, "TNR@95": 29.18, "OSCR": 85.76, "AUIN": 95.36, "AUOUT": 65.14}
