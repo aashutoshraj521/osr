@@ -199,6 +199,34 @@ def evaluate_model(model, known_loader, unknown_loader, device):
         known_targets
     )
 
+def get_device_and_backend():
+    # Try TPU via torch_xla first
+    try:
+        import torch_xla
+        import torch_xla.core.xla_model as xm
+        device = xm.xla_device()
+        print(f"[Device] Using TPU device: {device}", flush=True)
+        return device, "tpu", xm
+    except Exception:
+        pass
+
+    # Try NVIDIA CUDA GPU next
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+        print(f"[Device] Using CUDA GPU: {torch.cuda.get_device_name(0)}", flush=True)
+        return device, "cuda", None
+
+    # Fallback to multi-core CPU
+    device = torch.device("cpu")
+    print("[Device] Using CPU", flush=True)
+    return device, "cpu", None
+
+def save_model_checkpoint(state, path, backend, xm):
+    if backend == "tpu" and xm is not None:
+        xm.save(state, str(path))
+    else:
+        torch.save(state, str(path))
+
 def git_push_progress(output_dir, commit_msg):
     try:
         os.system(f"git add {output_dir}/*.json {output_dir}/*.jsonl {output_dir}/*_best.pth 2>/dev/null")
@@ -212,7 +240,7 @@ def git_push_progress(output_dir, commit_msg):
 # ---------------------------------------------------------------------------
 # Training Pipeline
 # ---------------------------------------------------------------------------
-def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, auto_push=False):
+def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False):
     print(f"\n========================================================", flush=True)
     print(f" Dataset: {dataset_name} | Method: {method} | Epochs: {epochs}", flush=True)
     print(f"========================================================", flush=True)
@@ -347,7 +375,12 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
                 logits, cam = model(inputs)
                 loss = criterion(logits, labels)
                 loss.backward()
-                optimizer.step()
+
+                if backend == "tpu" and xm is not None:
+                    xm.optimizer_step(optimizer)
+                    xm.mark_step()
+                else:
+                    optimizer.step()
 
                 # For BackMix: update CAM segmentation bank with network foreground estimation
                 if method.lower() == "backmix":
@@ -371,17 +404,17 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
             if metrics["AUROC"] > best_auroc:
                 best_auroc = metrics["AUROC"]
                 best_metrics = metrics.copy()
-                torch.save(model.state_dict(), Path(output_dir) / f"{dataset_name}_{method}_best.pth")
+                save_model_checkpoint(model.state_dict(), Path(output_dir) / f"{dataset_name}_{method}_best.pth", backend, xm)
 
             # Save checkpoint for resume
-            torch.save({
+            save_model_checkpoint({
                 "epoch": epoch,
                 "model_state": model.state_dict(),
                 "optimizer_state": optimizer.state_dict(),
                 "scheduler_state": scheduler.state_dict(),
                 "best_auroc": best_auroc,
                 "best_metrics": best_metrics
-            }, latest_ckpt)
+            }, latest_ckpt, backend, xm)
 
             log_entry = {
                 "epoch": epoch,
@@ -431,8 +464,8 @@ def main():
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Running on device: {device} | Output directory: {args.output_dir}")
+    device, backend, xm = get_device_and_backend()
+    print(f"Running on device: {device} (backend: {backend}) | Output directory: {args.output_dir}", flush=True)
 
     summary_results = {}
     for ds in args.datasets:
@@ -447,6 +480,8 @@ def main():
                 data_root=args.data_root,
                 output_dir=args.output_dir,
                 device=device,
+                backend=backend,
+                xm=xm,
                 auto_push=args.auto_push
             )
             summary_results[ds][method] = res
