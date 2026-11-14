@@ -8,3 +8,13 @@
 {"epoch": 8, "train_loss": 0.7108, "epoch_time_sec": 17.5, "Accuracy": 68.53, "AUROC": 61.13, "TNR@95": 7.1, "OSCR": 47.34, "AUIN": 86.75, "AUOUT": 25.17}
 {"epoch": 9, "train_loss": 0.604, "epoch_time_sec": 17.6, "Accuracy": 81.75, "AUROC": 72.82, "TNR@95": 18.2, "OSCR": 64.39, "AUIN": 91.54, "AUOUT": 37.26}
 {"epoch": 10, "train_loss": 0.5225, "epoch_time_sec": 17.6, "Accuracy": 60.77, "AUROC": 60.3, "TNR@95": 7.7, "OSCR": 42.21, "AUIN": 84.95, "AUOUT": 25.22}
+{"epoch": 11, "train_loss": 0.4981, "epoch_time_sec": 17.6, "Accuracy": 76.62, "AUROC": 68.76, "TNR@95": 10.9, "OSCR": 58.31, "AUIN": 89.8, "AUOUT": 31.68}
+{"epoch": 12, "train_loss": 0.4484, "epoch_time_sec": 17.7, "Accuracy": 76.33, "AUROC": 68.71, "TNR@95": 10.7, "OSCR": 58.56, "AUIN": 90.27, "AUOUT": 30.2}
+{"epoch": 13, "train_loss": 0.3941, "epoch_time_sec": 17.8, "Accuracy": 76.33, "AUROC": 71.87, "TNR@95": 15.2, "OSCR": 60.35, "AUIN": 91.42, "AUOUT": 35.01}
+{"epoch": 14, "train_loss": 0.3769, "epoch_time_sec": 17.7, "Accuracy": 77.05, "AUROC": 70.07, "TNR@95": 13.8, "OSCR": 59.95, "AUIN": 89.76, "AUOUT": 33.51}
+{"epoch": 15, "train_loss": 0.346, "epoch_time_sec": 17.7, "Accuracy": 87.65, "AUROC": 80.57, "TNR@95": 24.6, "OSCR": 74.86, "AUIN": 94.55, "AUOUT": 45.95}
+{"epoch": 16, "train_loss": 0.3135, "epoch_time_sec": 17.7, "Accuracy": 57.33, "AUROC": 55.29, "TNR@95": 7.0, "OSCR": 36.85, "AUIN": 84.16, "AUOUT": 22.76}
+{"epoch": 17, "train_loss": 0.3221, "epoch_time_sec": 17.7, "Accuracy": 82.03, "AUROC": 75.65, "TNR@95": 19.5, "OSCR": 66.62, "AUIN": 91.64, "AUOUT": 39.87}
+{"epoch": 18, "train_loss": 0.2849, "epoch_time_sec": 17.7, "Accuracy": 82.4, "AUROC": 76.12, "TNR@95": 19.1, "OSCR": 67.27, "AUIN": 92.99, "AUOUT": 39.91}
+{"epoch": 19, "train_loss": 0.2765, "epoch_time_sec": 17.6, "Accuracy": 85.12, "AUROC": 78.12, "TNR@95": 15.1, "OSCR": 71.62, "AUIN": 93.95, "AUOUT": 39.15}
+{"epoch": 20, "train_loss": 0.2471, "epoch_time_sec": 17.5, "Accuracy": 86.8, "AUROC": 83.1, "TNR@95": 23.6, "OSCR": 75.93, "AUIN": 95.33, "AUOUT": 51.01}
