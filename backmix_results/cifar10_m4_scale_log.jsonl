@@ -1,0 +1,10 @@
+{"epoch": 1, "train_loss": 2.1259, "epoch_time_sec": 23.7, "Accuracy": 38.47, "AUROC": 55.64, "TNR@95": 7.15, "OSCR": 24.15, "AUIN": 66.77, "AUOUT": 43.96}
+{"epoch": 2, "train_loss": 1.3956, "epoch_time_sec": 24.1, "Accuracy": 37.93, "AUROC": 48.18, "TNR@95": 4.88, "OSCR": 22.42, "AUIN": 61.42, "AUOUT": 38.83}
+{"epoch": 3, "train_loss": 1.0989, "epoch_time_sec": 23.9, "Accuracy": 37.23, "AUROC": 50.46, "TNR@95": 4.78, "OSCR": 23.2, "AUIN": 61.9, "AUOUT": 39.79}
+{"epoch": 4, "train_loss": 1.0718, "epoch_time_sec": 23.9, "Accuracy": 38.7, "AUROC": 48.37, "TNR@95": 3.75, "OSCR": 21.88, "AUIN": 60.43, "AUOUT": 37.98}
+{"epoch": 5, "train_loss": 0.9851, "epoch_time_sec": 24.0, "Accuracy": 33.23, "AUROC": 44.97, "TNR@95": 2.5, "OSCR": 19.52, "AUIN": 56.38, "AUOUT": 36.02}
+{"epoch": 6, "train_loss": 0.8811, "epoch_time_sec": 24.0, "Accuracy": 46.57, "AUROC": 45.28, "TNR@95": 4.32, "OSCR": 25.92, "AUIN": 57.8, "AUOUT": 37.0}
+{"epoch": 7, "train_loss": 0.8159, "epoch_time_sec": 24.0, "Accuracy": 39.85, "AUROC": 49.11, "TNR@95": 3.82, "OSCR": 22.89, "AUIN": 59.2, "AUOUT": 39.0}
+{"epoch": 8, "train_loss": 0.767, "epoch_time_sec": 24.0, "Accuracy": 47.15, "AUROC": 46.04, "TNR@95": 4.32, "OSCR": 26.75, "AUIN": 58.38, "AUOUT": 37.58}
+{"epoch": 9, "train_loss": 0.7516, "epoch_time_sec": 23.9, "Accuracy": 38.7, "AUROC": 37.62, "TNR@95": 2.65, "OSCR": 18.36, "AUIN": 51.35, "AUOUT": 32.76}
+{"epoch": 10, "train_loss": 0.7376, "epoch_time_sec": 24.2, "Accuracy": 46.38, "AUROC": 46.79, "TNR@95": 4.88, "OSCR": 26.35, "AUIN": 58.02, "AUOUT": 38.35}
