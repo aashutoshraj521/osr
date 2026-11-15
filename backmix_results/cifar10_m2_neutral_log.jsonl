@@ -18,3 +18,13 @@
 {"epoch": 18, "train_loss": 0.4739, "epoch_time_sec": 22.0, "Accuracy": 36.62, "AUROC": 51.26, "TNR@95": 6.5, "OSCR": 22.25, "AUIN": 59.57, "AUOUT": 42.11}
 {"epoch": 19, "train_loss": 0.4549, "epoch_time_sec": 21.7, "Accuracy": 36.63, "AUROC": 41.89, "TNR@95": 2.83, "OSCR": 17.26, "AUIN": 55.88, "AUOUT": 34.74}
 {"epoch": 20, "train_loss": 0.4546, "epoch_time_sec": 22.0, "Accuracy": 51.37, "AUROC": 51.18, "TNR@95": 3.75, "OSCR": 32.31, "AUIN": 62.33, "AUOUT": 39.88}
+{"epoch": 21, "train_loss": 0.4267, "epoch_time_sec": 22.1, "Accuracy": 43.05, "AUROC": 45.82, "TNR@95": 5.17, "OSCR": 23.04, "AUIN": 57.17, "AUOUT": 38.28}
+{"epoch": 22, "train_loss": 0.4116, "epoch_time_sec": 22.3, "Accuracy": 57.42, "AUROC": 48.74, "TNR@95": 4.6, "OSCR": 33.57, "AUIN": 59.53, "AUOUT": 39.42}
+{"epoch": 23, "train_loss": 0.3993, "epoch_time_sec": 22.1, "Accuracy": 45.83, "AUROC": 49.27, "TNR@95": 3.85, "OSCR": 26.56, "AUIN": 59.73, "AUOUT": 38.88}
+{"epoch": 24, "train_loss": 0.377, "epoch_time_sec": 22.0, "Accuracy": 44.67, "AUROC": 49.16, "TNR@95": 6.53, "OSCR": 25.44, "AUIN": 58.25, "AUOUT": 41.15}
+{"epoch": 25, "train_loss": 0.3547, "epoch_time_sec": 22.1, "Accuracy": 45.73, "AUROC": 52.72, "TNR@95": 5.27, "OSCR": 28.09, "AUIN": 63.22, "AUOUT": 41.57}
+{"epoch": 26, "train_loss": 0.3463, "epoch_time_sec": 22.0, "Accuracy": 50.5, "AUROC": 54.39, "TNR@95": 6.28, "OSCR": 32.81, "AUIN": 64.15, "AUOUT": 43.04}
+{"epoch": 27, "train_loss": 0.3288, "epoch_time_sec": 22.0, "Accuracy": 59.65, "AUROC": 49.02, "TNR@95": 4.42, "OSCR": 34.19, "AUIN": 60.08, "AUOUT": 39.17}
+{"epoch": 28, "train_loss": 0.3111, "epoch_time_sec": 21.8, "Accuracy": 53.68, "AUROC": 51.23, "TNR@95": 4.75, "OSCR": 31.71, "AUIN": 60.67, "AUOUT": 40.51}
+{"epoch": 29, "train_loss": 0.304, "epoch_time_sec": 22.0, "Accuracy": 49.85, "AUROC": 46.24, "TNR@95": 6.17, "OSCR": 26.79, "AUIN": 57.16, "AUOUT": 38.79}
+{"epoch": 30, "train_loss": 0.296, "epoch_time_sec": 22.3, "Accuracy": 51.97, "AUROC": 57.5, "TNR@95": 6.65, "OSCR": 33.7, "AUIN": 67.35, "AUOUT": 44.95}
