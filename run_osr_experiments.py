@@ -16,6 +16,7 @@ import torchvision.transforms as T
 from sklearn.metrics import roc_auc_score, precision_recall_curve, auc
 
 from backmix import BMixDataset
+from fg_stochastic_dataset import ForegroundNoiseDataset
 
 # Set optimal thread count for local multi-core CPU
 torch.set_num_threads(4)
@@ -307,8 +308,17 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
         raise ValueError(f"Unsupported dataset {dataset_name}")
 
     # Build Training DataLoader
-    if method.lower() == "backmix":
+    m_lower = method.lower()
+    if m_lower == "backmix":
         train_ds = BMixDataset(train_base)
+    elif m_lower == "m2_neutral":
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=False)
+    elif m_lower == "m3_noise":
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=True, noise_type="gaussian")
+    elif m_lower == "m4_scale":
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=False)
+    elif m_lower in ["m5_proposed", "proposed"]:
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type="gaussian")
     else:
         # Baseline Plain* (standard augmentations without mixing)
         class StandardAugDataset(Dataset):
@@ -380,6 +390,9 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
                 if method.lower() == "backmix":
                     raw_img, mix_img, labels, idxs = batch
                     inputs = mix_img.to(device)
+                elif method.lower() in ["m2_neutral", "m3_noise", "m4_scale", "m5_proposed", "proposed"]:
+                    raw_img, proc_img, labels, idxs = batch
+                    inputs = proc_img.to(device)
                 else:
                     inputs, labels, idxs = batch
                     inputs = inputs.to(device)
@@ -396,8 +409,8 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
                 else:
                     optimizer.step()
 
-                # For BackMix: update CAM segmentation bank with network foreground estimation
-                if method.lower() == "backmix":
+                # For BackMix & Foreground-Noise models: update CAM segmentation bank with network foreground estimation
+                if method.lower() in ["backmix", "m2_neutral", "m3_noise", "m4_scale", "m5_proposed", "proposed"]:
                     with torch.no_grad():
                         prob_cam = F.softmax(cam, dim=1) # (B, num_classes, 8, 8)
                         fg_mask = prob_cam[torch.arange(len(labels)), labels].detach().cpu()
@@ -468,8 +481,8 @@ def main():
     parser = argparse.ArgumentParser(description="BackMix Open Set Recognition Benchmark")
     parser.add_argument("--datasets", nargs="+", default=["cifar10", "cifar+10", "svhn"],
                         help="Datasets to evaluate (cifar10, cifar+10, svhn)")
-    parser.add_argument("--methods", nargs="+", default=["plain", "backmix"],
-                        help="Methods to run: plain (baseline) and/or backmix")
+    parser.add_argument("--methods", nargs="+", default=["plain", "backmix", "m5_proposed"],
+                        help="Methods to run: plain, backmix, m2_neutral, m3_noise, m4_scale, m5_proposed")
     parser.add_argument("--epochs", type=int, default=100, help="Training epochs")
     parser.add_argument("--batch-size", type=int, default=128, help="Batch size")
     parser.add_argument("--lr", type=float, default=0.1, help="Learning rate")
