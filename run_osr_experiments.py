@@ -245,7 +245,7 @@ def git_push_progress(output_dir, commit_msg):
 # ---------------------------------------------------------------------------
 # Training Pipeline
 # ---------------------------------------------------------------------------
-def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False):
+def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0):
     print(f"\n========================================================", flush=True)
     print(f" Dataset: {dataset_name} | Method: {method} | Epochs: {epochs}", flush=True)
     print(f"========================================================", flush=True)
@@ -419,7 +419,7 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
                 total_loss += loss.item() * inputs.size(0)
                 n_samples += inputs.size(0)
 
-                if (batch_idx + 1) % 20 == 0 or (batch_idx + 1) == total_batches:
+                if log_interval > 0 and ((batch_idx + 1) % log_interval == 0 or (batch_idx + 1) == total_batches):
                     print(f"  [Epoch {epoch:03d}/{epochs:03d}] Batch {batch_idx+1:03d}/{total_batches:03d} - Loss: {loss.item():.4f}", flush=True)
 
             scheduler.step()
@@ -489,6 +489,7 @@ def main():
     parser.add_argument("--data-root", type=str, default="./data")
     parser.add_argument("--output-dir", type=str, default="./backmix_results")
     parser.add_argument("--auto-push", action="store_true", help="Auto push progress and results to git")
+    parser.add_argument("--log-interval", type=int, default=0, help="Print progress every N batches (default: 0, prints only per-epoch summary)")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
@@ -510,7 +511,8 @@ def main():
                 device=device,
                 backend=backend,
                 xm=xm,
-                auto_push=args.auto_push
+                auto_push=args.auto_push,
+                log_interval=args.log_interval
             )
             summary_results[ds][method] = res
 
