@@ -1,0 +1,29 @@
+{
+  "raw": {
+    "Accuracy": 35.67,
+    "AUROC": 60.09,
+    "TNR@95": 6.95,
+    "OSCR": 23.74,
+    "AUIN": 70.3,
+    "AUOUT": 46.7,
+    "time_sec": 4.76
+  },
+  "foreground_only": {
+    "Accuracy": 18.18,
+    "AUROC": 51.44,
+    "TNR@95": 6.58,
+    "OSCR": 9.5,
+    "AUIN": 61.62,
+    "AUOUT": 41.85,
+    "time_sec": 8.23
+  },
+  "background_only": {
+    "Accuracy": 26.17,
+    "AUROC": 58.09,
+    "TNR@95": 6.58,
+    "OSCR": 17.65,
+    "AUIN": 67.83,
+    "AUOUT": 45.32,
+    "time_sec": 8.28
+  }
+}
