@@ -58,3 +58,13 @@
 {"epoch": 58, "train_loss": 0.3133, "epoch_time_sec": 22.9, "Accuracy": 50.2, "AUROC": 48.23, "TNR@95": 4.47, "OSCR": 31.41, "AUIN": 62.44, "AUOUT": 37.96}
 {"epoch": 59, "train_loss": 0.3161, "epoch_time_sec": 22.7, "Accuracy": 50.73, "AUROC": 45.92, "TNR@95": 6.0, "OSCR": 29.86, "AUIN": 59.56, "AUOUT": 38.33}
 {"epoch": 60, "train_loss": 0.3148, "epoch_time_sec": 22.8, "Accuracy": 55.23, "AUROC": 46.36, "TNR@95": 6.17, "OSCR": 31.67, "AUIN": 59.64, "AUOUT": 38.66}
+{"epoch": 61, "train_loss": 0.3107, "epoch_time_sec": 23.2, "Accuracy": 54.3, "AUROC": 44.56, "TNR@95": 5.15, "OSCR": 28.43, "AUIN": 56.36, "AUOUT": 37.8}
+{"epoch": 62, "train_loss": 0.3081, "epoch_time_sec": 23.0, "Accuracy": 59.82, "AUROC": 47.7, "TNR@95": 5.4, "OSCR": 35.33, "AUIN": 61.07, "AUOUT": 38.96}
+{"epoch": 63, "train_loss": 0.3037, "epoch_time_sec": 23.0, "Accuracy": 48.22, "AUROC": 44.97, "TNR@95": 3.2, "OSCR": 28.44, "AUIN": 60.31, "AUOUT": 35.86}
+{"epoch": 64, "train_loss": 0.2923, "epoch_time_sec": 22.7, "Accuracy": 54.9, "AUROC": 45.69, "TNR@95": 3.95, "OSCR": 31.99, "AUIN": 59.87, "AUOUT": 36.66}
+{"epoch": 65, "train_loss": 0.2902, "epoch_time_sec": 23.1, "Accuracy": 58.93, "AUROC": 45.77, "TNR@95": 4.23, "OSCR": 33.35, "AUIN": 60.97, "AUOUT": 36.69}
+{"epoch": 66, "train_loss": 0.2823, "epoch_time_sec": 22.6, "Accuracy": 50.1, "AUROC": 46.59, "TNR@95": 4.5, "OSCR": 30.12, "AUIN": 61.58, "AUOUT": 37.05}
+{"epoch": 67, "train_loss": 0.2796, "epoch_time_sec": 22.6, "Accuracy": 60.3, "AUROC": 47.54, "TNR@95": 4.17, "OSCR": 35.56, "AUIN": 62.21, "AUOUT": 37.87}
+{"epoch": 68, "train_loss": 0.2661, "epoch_time_sec": 23.0, "Accuracy": 49.15, "AUROC": 45.57, "TNR@95": 2.57, "OSCR": 29.64, "AUIN": 61.7, "AUOUT": 35.76}
+{"epoch": 69, "train_loss": 0.2579, "epoch_time_sec": 23.1, "Accuracy": 58.37, "AUROC": 45.22, "TNR@95": 3.33, "OSCR": 33.14, "AUIN": 59.45, "AUOUT": 35.73}
+{"epoch": 70, "train_loss": 0.2536, "epoch_time_sec": 23.3, "Accuracy": 55.75, "AUROC": 49.18, "TNR@95": 3.77, "OSCR": 34.06, "AUIN": 63.35, "AUOUT": 38.1}
