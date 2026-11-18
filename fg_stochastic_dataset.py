@@ -16,7 +16,7 @@ class ForegroundNoiseDataset(Dataset):
     - M4: enlarge=True,  noise_bg=False (Enlarged scale, constant neutral background)
     - M5: enlarge=True,  noise_bg=True  (Enlarged scale, dynamic stochastic noise - Proposed Full Model)
     """
-    def __init__(self, src_ds, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type="gaussian", mask_ratio=0.30):
+    def __init__(self, src_ds, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type="balanced_uniform", mask_ratio=0.30, static_noise=True):
         self.ds = src_ds
         self.target_size = target_size
         self.margin = margin
@@ -24,6 +24,7 @@ class ForegroundNoiseDataset(Dataset):
         self.noise_bg = noise_bg
         self.noise_type = noise_type
         self.mask_ratio = mask_ratio
+        self.static_noise = static_noise
         
         self.resize_crop = transforms.Compose([
             transforms.Resize(target_size),
@@ -42,9 +43,40 @@ class ForegroundNoiseDataset(Dataset):
         self.seg_momentum = 0.1
         self.seg_bank = None
         self.init_segbank(8, 8)
+        
+        # Static noise bank: fixed background noise canvas per image throughout training
+        self.noise_bank = None
+        if self.noise_bg and self.static_noise:
+            self.init_noisebank()
 
     def __len__(self):
         return len(self.ds)
+
+    def init_noisebank(self):
+        """Pre-generate fixed static noise canvas for each image, held constant across all epochs."""
+        N = len(self.ds)
+        C = 3
+        L = self.target_size
+        total = C * L * L
+        half = total // 2
+        
+        if self.noise_type in ["balanced_uniform", "balanced_discrete_uniform"]:
+            num_levels = 16
+            scale = 2.0 / num_levels
+            steps = torch.randint(1, num_levels + 1, (N, half))
+            vals = steps.float() * scale
+            antithetic = -vals
+            all_vals = torch.cat([vals, antithetic], dim=1)  # (N, total)
+            rand_keys = torch.rand(N, total)
+            perm = torch.argsort(rand_keys, dim=1)
+            shuffled = torch.gather(all_vals, 1, perm)
+            self.noise_bank = shuffled.view(N, C, L, L)
+        elif self.noise_type == "gaussian":
+            self.noise_bank = torch.randn(N, C, L, L, dtype=torch.float32)
+        else:
+            self.noise_bank = torch.rand(N, C, L, L, dtype=torch.float32) * 4.0 - 2.0
+            
+        self.noise_bank.share_memory_()
 
     def init_segbank(self, h, w):
         self.seg_bank = torch.ones([len(self.ds), h, w], dtype=torch.float32) * 0.5
@@ -57,7 +89,7 @@ class ForegroundNoiseDataset(Dataset):
             self.init_segbank(h, w)
         self.seg_bank[idx] = seg_mask * self.seg_momentum + self.seg_bank[idx] * (1.0 - self.seg_momentum)
 
-    def _apply_transformation(self, img_tensor, seg_map):
+    def _apply_transformation(self, img_tensor, seg_map, idx=None):
         C, H, W = img_tensor.shape
         L = self.target_size
         
@@ -117,12 +149,11 @@ class ForegroundNoiseDataset(Dataset):
 
         # 5. Background canvas generation
         if self.noise_bg:
-            if self.noise_type == "gaussian":
-                # N_t ~ N(0, 1) in normalized feature space
-                bg = torch.randn(C, L, L, dtype=torch.float32)
+            if self.static_noise and self.noise_bank is not None and idx is not None:
+                # Use fixed static background canvas for this image sample throughout training
+                bg = self.noise_bank[idx]
             elif self.noise_type in ["balanced_uniform", "balanced_discrete_uniform"]:
-                # Balanced discrete uniform noise with complementary (antithetic) pairs
-                # Generates complementary intensity pairs (+v, -v) and randomly distributes them
+                # Dynamic fallback if not static: balanced discrete uniform noise
                 total = C * L * L
                 half = total // 2
                 num_levels = 16  # discrete intensity quantization steps
@@ -133,9 +164,11 @@ class ForegroundNoiseDataset(Dataset):
                 all_vals = torch.cat([vals, antithetic], dim=0)
                 if all_vals.numel() < total:
                     all_vals = torch.cat([all_vals, torch.zeros(1)], dim=0)
-                # Randomly distribute across the background canvas
                 perm = torch.randperm(total)
                 bg = all_vals[perm].view(C, L, L)
+            elif self.noise_type == "gaussian":
+                # N_t ~ N(0, 1) in normalized feature space
+                bg = torch.randn(C, L, L, dtype=torch.float32)
             else:
                 # N_t ~ U(-2, 2) – fallback for continuous uniform noise
                 bg = torch.rand(C, L, L, dtype=torch.float32) * 4.0 - 2.0
@@ -177,7 +210,7 @@ class ForegroundNoiseDataset(Dataset):
 
         # Apply transformation
         seg_map = self.seg_bank[idx]
-        proc_img = self._apply_transformation(raw_img, seg_map)
+        proc_img = self._apply_transformation(raw_img, seg_map, idx=idx)
 
         # Apply data augmentation to regularize spatial robustness
         # Convert to [0, 1] range for PIL augmentation, then back to normalized tensor

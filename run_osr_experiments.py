@@ -245,7 +245,7 @@ def git_push_progress(output_dir, commit_msg):
 # ---------------------------------------------------------------------------
 # Training Pipeline
 # ---------------------------------------------------------------------------
-def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0, noise_type="balanced_uniform"):
+def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0, noise_type="balanced_uniform", static_noise=True):
     print(f"\n========================================================", flush=True)
     print(f" Dataset: {dataset_name} | Method: {method} | Epochs: {epochs}", flush=True)
     print(f"========================================================", flush=True)
@@ -314,11 +314,11 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
     elif m_lower == "m2_neutral":
         train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=False)
     elif m_lower == "m3_noise":
-        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=True, noise_type=noise_type)
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=True, noise_type=noise_type, static_noise=static_noise)
     elif m_lower == "m4_scale":
         train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=False)
     elif m_lower in ["m5_proposed", "proposed"]:
-        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type=noise_type)
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type=noise_type, static_noise=static_noise)
     else:
         # Baseline Plain* (standard augmentations without mixing)
         class StandardAugDataset(Dataset):
@@ -515,6 +515,10 @@ def main():
     parser.add_argument("--log-interval", type=int, default=0, help="Print progress every N batches (default: 0, prints only per-epoch summary)")
     parser.add_argument("--noise-type", type=str, default="balanced_uniform", choices=["balanced_uniform", "gaussian", "uniform"],
                         help="Noise type for M3 and M5 background (default: balanced_uniform)")
+    parser.add_argument("--static-noise", action="store_true", default=True,
+                        help="Hold background noise static across all epochs (default: True)")
+    parser.add_argument("--dynamic-noise", action="store_false", dest="static_noise",
+                        help="Regenerate dynamic noise on every epoch")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
@@ -538,7 +542,8 @@ def main():
                 xm=xm,
                 auto_push=args.auto_push,
                 log_interval=args.log_interval,
-                noise_type=args.noise_type
+                noise_type=args.noise_type,
+                static_noise=args.static_noise
             )
             summary_results[ds][method] = res
 
