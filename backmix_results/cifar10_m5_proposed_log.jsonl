@@ -8,3 +8,13 @@
 {"epoch": 8, "train_loss": 0.8852, "epoch_time_sec": 23.1, "Accuracy": 38.72, "AUROC": 44.47, "TNR@95": 3.2, "OSCR": 22.83, "AUIN": 57.82, "AUOUT": 35.8}
 {"epoch": 9, "train_loss": 0.8367, "epoch_time_sec": 23.2, "Accuracy": 44.85, "AUROC": 45.3, "TNR@95": 4.9, "OSCR": 25.44, "AUIN": 56.86, "AUOUT": 37.78}
 {"epoch": 10, "train_loss": 0.7874, "epoch_time_sec": 23.3, "Accuracy": 47.43, "AUROC": 51.59, "TNR@95": 5.47, "OSCR": 29.56, "AUIN": 61.47, "AUOUT": 41.16}
+{"epoch": 11, "train_loss": 0.7402, "epoch_time_sec": 23.2, "Accuracy": 43.63, "AUROC": 48.09, "TNR@95": 5.3, "OSCR": 24.96, "AUIN": 58.69, "AUOUT": 39.5}
+{"epoch": 12, "train_loss": 0.6916, "epoch_time_sec": 23.1, "Accuracy": 42.4, "AUROC": 46.35, "TNR@95": 4.23, "OSCR": 24.38, "AUIN": 57.8, "AUOUT": 38.1}
+{"epoch": 13, "train_loss": 0.6514, "epoch_time_sec": 23.3, "Accuracy": 39.95, "AUROC": 45.33, "TNR@95": 4.0, "OSCR": 21.3, "AUIN": 56.56, "AUOUT": 37.26}
+{"epoch": 14, "train_loss": 0.6166, "epoch_time_sec": 23.1, "Accuracy": 38.17, "AUROC": 51.7, "TNR@95": 5.12, "OSCR": 23.87, "AUIN": 61.77, "AUOUT": 40.9}
+{"epoch": 15, "train_loss": 0.6095, "epoch_time_sec": 23.3, "Accuracy": 40.57, "AUROC": 50.52, "TNR@95": 4.52, "OSCR": 24.36, "AUIN": 60.98, "AUOUT": 39.86}
+{"epoch": 16, "train_loss": 0.5906, "epoch_time_sec": 23.3, "Accuracy": 31.83, "AUROC": 46.84, "TNR@95": 5.95, "OSCR": 16.04, "AUIN": 57.97, "AUOUT": 38.76}
+{"epoch": 17, "train_loss": 0.5697, "epoch_time_sec": 23.1, "Accuracy": 39.63, "AUROC": 50.51, "TNR@95": 5.27, "OSCR": 23.22, "AUIN": 60.25, "AUOUT": 40.43}
+{"epoch": 18, "train_loss": 0.5649, "epoch_time_sec": 22.8, "Accuracy": 34.42, "AUROC": 43.27, "TNR@95": 3.55, "OSCR": 17.74, "AUIN": 55.35, "AUOUT": 35.76}
+{"epoch": 19, "train_loss": 0.5576, "epoch_time_sec": 23.4, "Accuracy": 35.67, "AUROC": 60.09, "TNR@95": 6.95, "OSCR": 23.74, "AUIN": 70.3, "AUOUT": 46.7}
+{"epoch": 20, "train_loss": 0.5567, "epoch_time_sec": 23.1, "Accuracy": 39.22, "AUROC": 56.99, "TNR@95": 7.38, "OSCR": 24.11, "AUIN": 66.73, "AUOUT": 45.78}
