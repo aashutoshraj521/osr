@@ -18,3 +18,13 @@
 {"epoch": 18, "train_loss": 0.5649, "epoch_time_sec": 22.8, "Accuracy": 34.42, "AUROC": 43.27, "TNR@95": 3.55, "OSCR": 17.74, "AUIN": 55.35, "AUOUT": 35.76}
 {"epoch": 19, "train_loss": 0.5576, "epoch_time_sec": 23.4, "Accuracy": 35.67, "AUROC": 60.09, "TNR@95": 6.95, "OSCR": 23.74, "AUIN": 70.3, "AUOUT": 46.7}
 {"epoch": 20, "train_loss": 0.5567, "epoch_time_sec": 23.1, "Accuracy": 39.22, "AUROC": 56.99, "TNR@95": 7.38, "OSCR": 24.11, "AUIN": 66.73, "AUOUT": 45.78}
+{"epoch": 21, "train_loss": 0.5453, "epoch_time_sec": 23.5, "Accuracy": 43.07, "AUROC": 47.98, "TNR@95": 4.98, "OSCR": 24.63, "AUIN": 59.2, "AUOUT": 38.93}
+{"epoch": 22, "train_loss": 0.5286, "epoch_time_sec": 23.0, "Accuracy": 41.97, "AUROC": 54.99, "TNR@95": 6.83, "OSCR": 25.72, "AUIN": 64.65, "AUOUT": 43.99}
+{"epoch": 23, "train_loss": 0.5228, "epoch_time_sec": 22.9, "Accuracy": 42.7, "AUROC": 53.51, "TNR@95": 7.47, "OSCR": 26.49, "AUIN": 62.4, "AUOUT": 43.67}
+{"epoch": 24, "train_loss": 0.513, "epoch_time_sec": 22.8, "Accuracy": 37.58, "AUROC": 59.01, "TNR@95": 7.72, "OSCR": 23.92, "AUIN": 68.97, "AUOUT": 46.42}
+{"epoch": 25, "train_loss": 0.5057, "epoch_time_sec": 22.8, "Accuracy": 42.37, "AUROC": 50.66, "TNR@95": 4.92, "OSCR": 26.2, "AUIN": 61.37, "AUOUT": 40.25}
+{"epoch": 26, "train_loss": 0.5034, "epoch_time_sec": 22.7, "Accuracy": 39.35, "AUROC": 56.24, "TNR@95": 5.5, "OSCR": 24.78, "AUIN": 67.61, "AUOUT": 43.4}
+{"epoch": 27, "train_loss": 0.5062, "epoch_time_sec": 22.6, "Accuracy": 43.2, "AUROC": 52.55, "TNR@95": 6.38, "OSCR": 26.13, "AUIN": 63.71, "AUOUT": 42.33}
+{"epoch": 28, "train_loss": 0.5049, "epoch_time_sec": 22.6, "Accuracy": 41.15, "AUROC": 44.95, "TNR@95": 4.03, "OSCR": 22.46, "AUIN": 57.45, "AUOUT": 36.93}
+{"epoch": 29, "train_loss": 0.5149, "epoch_time_sec": 22.9, "Accuracy": 43.98, "AUROC": 55.94, "TNR@95": 8.08, "OSCR": 28.5, "AUIN": 65.88, "AUOUT": 45.01}
+{"epoch": 30, "train_loss": 0.5113, "epoch_time_sec": 22.8, "Accuracy": 45.67, "AUROC": 56.9, "TNR@95": 7.1, "OSCR": 28.49, "AUIN": 67.18, "AUOUT": 44.62}
