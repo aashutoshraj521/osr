@@ -245,7 +245,7 @@ def git_push_progress(output_dir, commit_msg):
 # ---------------------------------------------------------------------------
 # Training Pipeline
 # ---------------------------------------------------------------------------
-def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0):
+def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0, noise_type="balanced_uniform"):
     print(f"\n========================================================", flush=True)
     print(f" Dataset: {dataset_name} | Method: {method} | Epochs: {epochs}", flush=True)
     print(f"========================================================", flush=True)
@@ -314,11 +314,11 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
     elif m_lower == "m2_neutral":
         train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=False)
     elif m_lower == "m3_noise":
-        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=True, noise_type="gaussian")
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=True, noise_type=noise_type)
     elif m_lower == "m4_scale":
         train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=False)
     elif m_lower in ["m5_proposed", "proposed"]:
-        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type="gaussian")
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type=noise_type)
     else:
         # Baseline Plain* (standard augmentations without mixing)
         class StandardAugDataset(Dataset):
@@ -490,6 +490,8 @@ def main():
     parser.add_argument("--output-dir", type=str, default="./backmix_results")
     parser.add_argument("--auto-push", action="store_true", help="Auto push progress and results to git")
     parser.add_argument("--log-interval", type=int, default=0, help="Print progress every N batches (default: 0, prints only per-epoch summary)")
+    parser.add_argument("--noise-type", type=str, default="balanced_uniform", choices=["balanced_uniform", "gaussian", "uniform"],
+                        help="Noise type for M3 and M5 background (default: balanced_uniform)")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
@@ -512,7 +514,8 @@ def main():
                 backend=backend,
                 xm=xm,
                 auto_push=args.auto_push,
-                log_interval=args.log_interval
+                log_interval=args.log_interval,
+                noise_type=args.noise_type
             )
             summary_results[ds][method] = res
 

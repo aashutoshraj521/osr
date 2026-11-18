@@ -120,8 +120,24 @@ class ForegroundNoiseDataset(Dataset):
             if self.noise_type == "gaussian":
                 # N_t ~ N(0, 1) in normalized feature space
                 bg = torch.randn(C, L, L, dtype=torch.float32)
+            elif self.noise_type in ["balanced_uniform", "balanced_discrete_uniform"]:
+                # Balanced discrete uniform noise with complementary (antithetic) pairs
+                # Generates complementary intensity pairs (+v, -v) and randomly distributes them
+                total = C * L * L
+                half = total // 2
+                num_levels = 16  # discrete intensity quantization steps
+                steps = torch.randint(1, num_levels + 1, (half,))
+                scale = 2.0 / num_levels  # scaled to match normalized space [-2.0, 2.0]
+                vals = steps.float() * scale
+                antithetic = -vals
+                all_vals = torch.cat([vals, antithetic], dim=0)
+                if all_vals.numel() < total:
+                    all_vals = torch.cat([all_vals, torch.zeros(1)], dim=0)
+                # Randomly distribute across the background canvas
+                perm = torch.randperm(total)
+                bg = all_vals[perm].view(C, L, L)
             else:
-                # N_t ~ U(-2, 2)
+                # N_t ~ U(-2, 2) – fallback for continuous uniform noise
                 bg = torch.rand(C, L, L, dtype=torch.float32) * 4.0 - 2.0
         else:
             # Constant neutral canvas (mean value 0 in normalized space)
