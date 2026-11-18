@@ -366,6 +366,7 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
     start_epoch = 1
     log_file = Path(output_dir) / f"{dataset_name}_{method}_log.jsonl"
     latest_ckpt = Path(output_dir) / f"{dataset_name}_{method}_latest.pth"
+    best_ckpt = Path(output_dir) / f"{dataset_name}_{method}_best.pth"
 
     if latest_ckpt.exists():
         checkpoint = torch.load(latest_ckpt, map_location=device)
@@ -375,7 +376,29 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
         scheduler.load_state_dict(checkpoint["scheduler_state"])
         best_auroc = checkpoint.get("best_auroc", 0.0)
         best_metrics = checkpoint.get("best_metrics", {})
-        print(f"Resuming {dataset_name} [{method}] from epoch {start_epoch} (Best AUROC so far: {best_auroc:.2f}%)", flush=True)
+        print(f"Resuming {dataset_name} [{method}] from epoch {start_epoch} via latest checkpoint (Best AUROC: {best_auroc:.2f}%)", flush=True)
+    elif log_file.exists() and best_ckpt.exists():
+        try:
+            with open(log_file, "r") as f:
+                lines = [l.strip() for l in f if l.strip()]
+            if lines:
+                last_entry = json.loads(lines[-1])
+                last_epoch = last_entry.get("epoch", 0)
+                if last_epoch < epochs:
+                    start_epoch = last_epoch + 1
+                    for l in lines:
+                        e = json.loads(l)
+                        if e.get("AUROC", 0.0) > best_auroc:
+                            best_auroc = e["AUROC"]
+                            best_metrics = e
+                    state = torch.load(best_ckpt, map_location=device)
+                    raw_s = state.get("model_state", state)
+                    get_raw_model(model).load_state_dict(raw_s)
+                    for _ in range(last_epoch):
+                        scheduler.step()
+                    print(f"Resuming {dataset_name} [{method}] from epoch {start_epoch} via best checkpoint & log (Best AUROC: {best_auroc:.2f}%)", flush=True)
+        except Exception as e:
+            print(f"[Resume Warning] Could not parse log/best checkpoint: {e}. Starting from epoch 1.", flush=True)
 
     mode = "a" if (start_epoch > 1 and log_file.exists()) else "w"
     with open(log_file, mode) as lf:

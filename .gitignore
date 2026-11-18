@@ -172,6 +172,5 @@ cython_debug/
 
 # Data and large checkpoints
 data/
-*_latest.pth
 *.tar.gz
 
