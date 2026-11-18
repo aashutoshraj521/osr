@@ -14,6 +14,7 @@ import torch
 import torch.nn.functional as F
 import torchvision
 from torch.utils.data import DataLoader
+from pathlib import Path
 
 from run_osr_experiments import ResNet18_OSR, StandardEvalDataset, evaluate_model, compute_osr_metrics
 from eval_foreground_only import evaluate_foreground_only
@@ -65,6 +66,7 @@ def main():
     parser.add_argument("--data-root", type=str, default="./data")
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--output-json", type=str, default=None)
+    parser.add_argument("--auto-push", action="store_true", help="Automatically commit and push results to GitHub")
     parser.add_argument("--device", type=str, default="cuda" if torch.cuda.is_available() else "cpu")
     args = parser.parse_args()
 
@@ -103,12 +105,32 @@ def main():
     model.eval()
 
     res = evaluate_model_all_conditions(model, known_loader, unknown_loader, device)
-    print_table(res, model_name=os.path.basename(args.model_path))
+    model_name = os.path.basename(args.model_path)
+    print_table(res, model_name=model_name)
 
-    if args.output_json:
-        with open(args.output_json, "w") as f:
-            json.dump(res, f, indent=2)
-        print(f"Results saved to {args.output_json}")
+    # Automatically save results JSON
+    out_json = args.output_json
+    if not out_json:
+        stem = Path(args.model_path).stem
+        out_json = os.path.join("backmix_results", f"{stem}_all_conditions.json")
+    
+    os.makedirs(os.path.dirname(out_json) or ".", exist_ok=True)
+    with open(out_json, "w") as f:
+        json.dump(res, f, indent=2)
+    print(f"Results saved to {out_json}")
+
+    # Auto push if requested
+    if args.auto_push:
+        print("[Auto-Push] Pushing evaluation results and checkpoints to GitHub...", flush=True)
+        os.system("git add backmix_results/*.json backmix_results/*.jsonl backmix_results/*_best.pth 2>/dev/null")
+        msg = f"chore: 3-condition evaluation for {model_name}"
+        os.system(f'git commit -m "{msg}" 2>/dev/null')
+        os.system("git pull --rebase origin main 2>/dev/null")
+        ret = os.system("git push origin main 2>/dev/null")
+        if ret == 0:
+            print(f"[Auto-Push] Successfully pushed {model_name} evaluation to GitHub!", flush=True)
+        else:
+            print(f"[Auto-Push Notice] Push returned exit code {ret} (check git remote / token)", flush=True)
 
 
 if __name__ == "__main__":
