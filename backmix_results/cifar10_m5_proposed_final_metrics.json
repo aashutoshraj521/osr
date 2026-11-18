@@ -1,8 +1,8 @@
 {
-  "Accuracy": 38.18,
-  "AUROC": 55.59,
-  "TNR@95": 6.0,
-  "OSCR": 24.49,
-  "AUIN": 65.7,
-  "AUOUT": 44.02
+  "Accuracy": 35.67,
+  "AUROC": 60.09,
+  "TNR@95": 6.95,
+  "OSCR": 23.74,
+  "AUIN": 70.3,
+  "AUOUT": 46.7
 }
