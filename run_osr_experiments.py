@@ -245,7 +245,7 @@ def git_push_progress(output_dir, commit_msg):
 # ---------------------------------------------------------------------------
 # Training Pipeline
 # ---------------------------------------------------------------------------
-def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0, noise_type="balanced_uniform", static_noise=True, shared_noise=True):
+def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0, noise_type="balanced_uniform", static_noise=True, shared_noise=True, force_retrain=False):
     print(f"\n========================================================", flush=True)
     print(f" Dataset: {dataset_name} | Method: {method} | Epochs: {epochs}", flush=True)
     print(f"========================================================", flush=True)
@@ -368,7 +368,15 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
     latest_ckpt = Path(output_dir) / f"{dataset_name}_{method}_latest.pth"
     best_ckpt = Path(output_dir) / f"{dataset_name}_{method}_best.pth"
 
-    if latest_ckpt.exists():
+    if force_retrain:
+        if latest_ckpt.exists():
+            latest_ckpt.unlink()
+        if best_ckpt.exists():
+            best_ckpt.unlink()
+        if log_file.exists():
+            log_file.unlink()
+        print(f"[{method}] Force retrain requested: cleared existing checkpoints and logs to train from epoch 1.", flush=True)
+    elif latest_ckpt.exists():
         checkpoint = torch.load(latest_ckpt, map_location=device)
         start_epoch = checkpoint["epoch"] + 1
         get_raw_model(model).load_state_dict(checkpoint["model_state"])
@@ -523,6 +531,8 @@ def main():
                         help="Use ONE single noise canvas across all images and epochs (default: True)")
     parser.add_argument("--per-sample-noise", action="store_false", dest="shared_noise",
                         help="Use a separate static noise canvas per sample")
+    parser.add_argument("--force-retrain", action="store_true",
+                        help="Ignore existing checkpoints and force retrain from epoch 1")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
@@ -548,7 +558,8 @@ def main():
                 log_interval=args.log_interval,
                 noise_type=args.noise_type,
                 static_noise=args.static_noise,
-                shared_noise=args.shared_noise
+                shared_noise=args.shared_noise,
+                force_retrain=args.force_retrain
             )
             summary_results[ds][method] = res
 
