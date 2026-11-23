@@ -22,7 +22,7 @@ from eval_background_only import evaluate_background_only
 
 
 def evaluate_model_all_conditions(model, known_loader, unknown_loader, device):
-    """Run evaluation across all 3 conditions on the given DataLoader pair."""
+    """Run evaluation across all conditions on the given DataLoader pair."""
     results = {}
     
     # Condition 1: Raw Images
@@ -30,12 +30,17 @@ def evaluate_model_all_conditions(model, known_loader, unknown_loader, device):
     results["raw"] = evaluate_model(model, known_loader, unknown_loader, device)
     results["raw"]["time_sec"] = round(time.time() - t0, 2)
     
-    # Condition 2: Foreground-Only (Object without background)
+    # Condition 2: Foreground-Only (Unscaled, original position)
     t0 = time.time()
     results["foreground_only"] = evaluate_foreground_only(model, known_loader, unknown_loader, device, enlarge=False)
     results["foreground_only"]["time_sec"] = round(time.time() - t0, 2)
     
-    # Condition 3: Background-Only (Object removed)
+    # Condition 3: Foreground-Only (Aspect-ratio enlarged & centered)
+    t0 = time.time()
+    results["foreground_enlarged"] = evaluate_foreground_only(model, known_loader, unknown_loader, device, enlarge=True)
+    results["foreground_enlarged"]["time_sec"] = round(time.time() - t0, 2)
+    
+    # Condition 4: Background-Only (Object removed)
     t0 = time.time()
     results["background_only"] = evaluate_background_only(model, known_loader, unknown_loader, device, mask_ratio=0.3)
     results["background_only"]["time_sec"] = round(time.time() - t0, 2)
@@ -45,14 +50,15 @@ def evaluate_model_all_conditions(model, known_loader, unknown_loader, device):
 
 def print_table(results, model_name="Model"):
     print("\n" + "=" * 80)
-    print(f"EVALUATION SUMMARY ACROSS ALL 3 TESTING CONDITIONS: {model_name}")
+    print(f"EVALUATION SUMMARY ACROSS ALL TESTING CONDITIONS: {model_name}")
     print("=" * 80)
     print(f"{'Condition':<25} | {'Accuracy':<10} | {'AUROC':<10} | {'OSCR':<10} | {'TNR@95':<10} | {'Time':<6}")
     print("-" * 80)
     for cond, name in [
         ("raw", "1. Raw (Full Image)"),
-        ("foreground_only", "2. Foreground-Only"),
-        ("background_only", "3. Background-Only")
+        ("foreground_only", "2. FG-Only (Unscaled)"),
+        ("foreground_enlarged", "3. FG-Only (Enlarged)"),
+        ("background_only", "4. Background-Only")
     ]:
         m = results[cond]
         print(f"{name:<25} | {m['Accuracy']:>8.2f}% | {m['AUROC']:>8.2f}% | {m['OSCR']:>8.2f}% | {m['TNR@95']:>8.2f}% | {m['time_sec']:>4.1f}s")
@@ -123,7 +129,7 @@ def main():
     if args.auto_push:
         print("[Auto-Push] Pushing evaluation results and checkpoints to GitHub...", flush=True)
         os.system("git add backmix_results/*.json backmix_results/*.jsonl backmix_results/*_best.pth 2>/dev/null")
-        msg = f"chore: 3-condition evaluation for {model_name}"
+        msg = f"chore: 4-condition evaluation for {model_name}"
         os.system(f'git commit -m "{msg}" 2>/dev/null')
         os.system("git pull --rebase origin main 2>/dev/null")
         ret = os.system("git push origin main 2>/dev/null")
