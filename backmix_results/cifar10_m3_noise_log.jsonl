@@ -88,3 +88,13 @@
 {"epoch": 88, "train_loss": 0.1461, "epoch_time_sec": 21.5, "Accuracy": 57.4, "AUROC": 50.75, "TNR@95": 4.8, "OSCR": 34.57, "AUIN": 62.49, "AUOUT": 40.18}
 {"epoch": 89, "train_loss": 0.1417, "epoch_time_sec": 21.6, "Accuracy": 58.9, "AUROC": 50.59, "TNR@95": 5.35, "OSCR": 35.24, "AUIN": 62.16, "AUOUT": 40.23}
 {"epoch": 90, "train_loss": 0.1384, "epoch_time_sec": 21.5, "Accuracy": 54.52, "AUROC": 49.76, "TNR@95": 4.23, "OSCR": 32.78, "AUIN": 62.0, "AUOUT": 38.94}
+{"epoch": 91, "train_loss": 0.138, "epoch_time_sec": 21.8, "Accuracy": 58.17, "AUROC": 50.4, "TNR@95": 4.8, "OSCR": 35.16, "AUIN": 62.26, "AUOUT": 39.61}
+{"epoch": 92, "train_loss": 0.135, "epoch_time_sec": 21.2, "Accuracy": 57.8, "AUROC": 50.54, "TNR@95": 3.9, "OSCR": 34.97, "AUIN": 63.19, "AUOUT": 39.2}
+{"epoch": 93, "train_loss": 0.1395, "epoch_time_sec": 21.3, "Accuracy": 58.83, "AUROC": 50.32, "TNR@95": 4.67, "OSCR": 34.88, "AUIN": 62.82, "AUOUT": 39.47}
+{"epoch": 94, "train_loss": 0.1347, "epoch_time_sec": 21.0, "Accuracy": 57.87, "AUROC": 50.59, "TNR@95": 4.7, "OSCR": 34.85, "AUIN": 62.77, "AUOUT": 39.69}
+{"epoch": 95, "train_loss": 0.1337, "epoch_time_sec": 21.2, "Accuracy": 58.68, "AUROC": 50.1, "TNR@95": 4.47, "OSCR": 35.16, "AUIN": 62.84, "AUOUT": 39.21}
+{"epoch": 96, "train_loss": 0.1347, "epoch_time_sec": 21.5, "Accuracy": 57.7, "AUROC": 50.75, "TNR@95": 4.42, "OSCR": 34.9, "AUIN": 63.26, "AUOUT": 39.57}
+{"epoch": 97, "train_loss": 0.1376, "epoch_time_sec": 21.2, "Accuracy": 57.73, "AUROC": 49.93, "TNR@95": 4.5, "OSCR": 34.6, "AUIN": 62.59, "AUOUT": 39.03}
+{"epoch": 98, "train_loss": 0.1411, "epoch_time_sec": 21.3, "Accuracy": 56.63, "AUROC": 49.04, "TNR@95": 3.88, "OSCR": 33.44, "AUIN": 61.71, "AUOUT": 38.39}
+{"epoch": 99, "train_loss": 0.1418, "epoch_time_sec": 21.2, "Accuracy": 58.55, "AUROC": 49.95, "TNR@95": 4.3, "OSCR": 35.03, "AUIN": 62.6, "AUOUT": 39.1}
+{"epoch": 100, "train_loss": 0.1455, "epoch_time_sec": 21.7, "Accuracy": 58.15, "AUROC": 49.84, "TNR@95": 4.12, "OSCR": 34.69, "AUIN": 62.4, "AUOUT": 39.01}
