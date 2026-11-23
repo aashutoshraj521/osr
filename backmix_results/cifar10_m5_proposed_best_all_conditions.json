@@ -1,29 +1,38 @@
 {
   "raw": {
-    "Accuracy": 35.67,
-    "AUROC": 60.09,
-    "TNR@95": 6.95,
-    "OSCR": 23.74,
-    "AUIN": 70.3,
-    "AUOUT": 46.7,
-    "time_sec": 4.69
+    "Accuracy": 62.88,
+    "AUROC": 54.11,
+    "TNR@95": 5.55,
+    "OSCR": 41.01,
+    "AUIN": 65.79,
+    "AUOUT": 42.43,
+    "time_sec": 5.25
   },
   "foreground_only": {
-    "Accuracy": 18.18,
-    "AUROC": 51.44,
-    "TNR@95": 6.58,
-    "OSCR": 9.5,
-    "AUIN": 61.62,
-    "AUOUT": 41.85,
-    "time_sec": 7.93
+    "Accuracy": 28.03,
+    "AUROC": 48.97,
+    "TNR@95": 3.4,
+    "OSCR": 16.61,
+    "AUIN": 62.11,
+    "AUOUT": 37.92,
+    "time_sec": 9.21
+  },
+  "foreground_enlarged": {
+    "Accuracy": 42.2,
+    "AUROC": 49.35,
+    "TNR@95": 5.03,
+    "OSCR": 25.07,
+    "AUIN": 60.77,
+    "AUOUT": 39.53,
+    "time_sec": 12.42
   },
   "background_only": {
-    "Accuracy": 26.17,
-    "AUROC": 58.09,
-    "TNR@95": 6.58,
-    "OSCR": 17.65,
-    "AUIN": 67.83,
-    "AUOUT": 45.32,
-    "time_sec": 7.9
+    "Accuracy": 35.98,
+    "AUROC": 46.58,
+    "TNR@95": 3.82,
+    "OSCR": 20.24,
+    "AUIN": 58.59,
+    "AUOUT": 37.57,
+    "time_sec": 9.09
   }
 }
