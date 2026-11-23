@@ -8,3 +8,13 @@
 {"epoch": 8, "train_loss": 0.9271, "epoch_time_sec": 22.5, "Accuracy": 47.02, "AUROC": 45.9, "TNR@95": 3.52, "OSCR": 27.08, "AUIN": 57.32, "AUOUT": 37.06}
 {"epoch": 9, "train_loss": 0.9118, "epoch_time_sec": 22.5, "Accuracy": 49.15, "AUROC": 47.18, "TNR@95": 4.32, "OSCR": 28.23, "AUIN": 58.07, "AUOUT": 37.99}
 {"epoch": 10, "train_loss": 0.8633, "epoch_time_sec": 22.7, "Accuracy": 49.0, "AUROC": 46.18, "TNR@95": 3.43, "OSCR": 28.04, "AUIN": 57.87, "AUOUT": 37.22}
+{"epoch": 11, "train_loss": 0.8226, "epoch_time_sec": 22.6, "Accuracy": 50.78, "AUROC": 51.42, "TNR@95": 5.35, "OSCR": 31.13, "AUIN": 60.97, "AUOUT": 41.18}
+{"epoch": 12, "train_loss": 0.7836, "epoch_time_sec": 22.7, "Accuracy": 48.9, "AUROC": 47.97, "TNR@95": 4.6, "OSCR": 29.79, "AUIN": 59.73, "AUOUT": 38.83}
+{"epoch": 13, "train_loss": 0.7465, "epoch_time_sec": 22.4, "Accuracy": 44.87, "AUROC": 43.57, "TNR@95": 3.33, "OSCR": 23.58, "AUIN": 57.23, "AUOUT": 35.91}
+{"epoch": 14, "train_loss": 0.7324, "epoch_time_sec": 22.5, "Accuracy": 51.38, "AUROC": 44.12, "TNR@95": 4.05, "OSCR": 27.0, "AUIN": 57.29, "AUOUT": 36.57}
+{"epoch": 15, "train_loss": 0.7162, "epoch_time_sec": 22.8, "Accuracy": 56.63, "AUROC": 47.02, "TNR@95": 5.17, "OSCR": 31.69, "AUIN": 58.59, "AUOUT": 38.53}
+{"epoch": 16, "train_loss": 0.6889, "epoch_time_sec": 22.5, "Accuracy": 49.28, "AUROC": 47.07, "TNR@95": 5.03, "OSCR": 27.91, "AUIN": 58.75, "AUOUT": 38.46}
+{"epoch": 17, "train_loss": 0.6846, "epoch_time_sec": 23.0, "Accuracy": 50.45, "AUROC": 45.88, "TNR@95": 5.73, "OSCR": 28.83, "AUIN": 57.55, "AUOUT": 38.74}
+{"epoch": 18, "train_loss": 0.6668, "epoch_time_sec": 23.1, "Accuracy": 51.3, "AUROC": 46.47, "TNR@95": 5.22, "OSCR": 29.4, "AUIN": 57.83, "AUOUT": 38.38}
+{"epoch": 19, "train_loss": 0.6646, "epoch_time_sec": 22.9, "Accuracy": 49.08, "AUROC": 49.14, "TNR@95": 6.58, "OSCR": 29.71, "AUIN": 59.27, "AUOUT": 41.02}
+{"epoch": 20, "train_loss": 0.6475, "epoch_time_sec": 22.8, "Accuracy": 48.12, "AUROC": 49.7, "TNR@95": 6.17, "OSCR": 28.93, "AUIN": 60.27, "AUOUT": 40.71}
