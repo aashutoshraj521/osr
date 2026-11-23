@@ -16,7 +16,7 @@ class ForegroundNoiseDataset(Dataset):
     - M4: enlarge=True,  noise_bg=False (Enlarged scale, constant neutral background)
     - M5: enlarge=True,  noise_bg=True  (Enlarged scale, dynamic stochastic noise - Proposed Full Model)
     """
-    def __init__(self, src_ds, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type="balanced_uniform", mask_ratio=0.30, static_noise=True):
+    def __init__(self, src_ds, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type="balanced_uniform", mask_ratio=0.30, static_noise=True, shared_single_noise=True, noise_seed=42):
         self.ds = src_ds
         self.target_size = target_size
         self.margin = margin
@@ -25,6 +25,8 @@ class ForegroundNoiseDataset(Dataset):
         self.noise_type = noise_type
         self.mask_ratio = mask_ratio
         self.static_noise = static_noise
+        self.shared_single_noise = shared_single_noise
+        self.noise_seed = noise_seed
         
         self.resize_crop = transforms.Compose([
             transforms.Resize(target_size),
@@ -44,13 +46,38 @@ class ForegroundNoiseDataset(Dataset):
         self.seg_bank = None
         self.init_segbank(8, 8)
         
-        # Static noise bank: fixed background noise canvas per image throughout training
+        # Background noise canvases
+        self.shared_noise = None
         self.noise_bank = None
-        if self.noise_bg and self.static_noise:
-            self.init_noisebank()
+        
+        if self.noise_bg:
+            if self.shared_single_noise:
+                # ONE single noise canvas shared across all images and all epochs
+                self.init_shared_noise()
+            elif self.static_noise:
+                # Per-sample static noise bank
+                self.init_noisebank()
 
     def __len__(self):
         return len(self.ds)
+
+    def init_shared_noise(self):
+        """Generate ONE single balanced discrete uniform noise canvas shared across all images and epochs."""
+        C = 3
+        L = self.target_size
+        total = C * L * L
+        half = total // 2
+        gen = torch.Generator().manual_seed(self.noise_seed)
+        
+        num_levels = 16
+        scale = 2.0 / num_levels
+        steps = torch.randint(1, num_levels + 1, (half,), generator=gen)
+        vals = steps.float() * scale
+        antithetic = -vals
+        all_vals = torch.cat([vals, antithetic], dim=0)
+        perm = torch.randperm(total, generator=gen)
+        self.shared_noise = all_vals[perm].view(C, L, L)
+        self.shared_noise.share_memory_()
 
     def init_noisebank(self):
         """Pre-generate fixed static noise canvas for each image, held constant across all epochs."""
@@ -149,7 +176,10 @@ class ForegroundNoiseDataset(Dataset):
 
         # 5. Background canvas generation
         if self.noise_bg:
-            if self.static_noise and self.noise_bank is not None and idx is not None:
+            if self.shared_single_noise and self.shared_noise is not None:
+                # EXACTLY the same single noise canvas for all images and all epochs
+                bg = self.shared_noise
+            elif self.static_noise and self.noise_bank is not None and idx is not None:
                 # Use fixed static background canvas for this image sample throughout training
                 bg = self.noise_bank[idx]
             elif self.noise_type in ["balanced_uniform", "balanced_discrete_uniform"]:

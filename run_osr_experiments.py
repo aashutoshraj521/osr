@@ -245,7 +245,7 @@ def git_push_progress(output_dir, commit_msg):
 # ---------------------------------------------------------------------------
 # Training Pipeline
 # ---------------------------------------------------------------------------
-def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0, noise_type="balanced_uniform", static_noise=True):
+def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_root, output_dir, device, backend="cpu", xm=None, auto_push=False, log_interval=0, noise_type="balanced_uniform", static_noise=True, shared_noise=True):
     print(f"\n========================================================", flush=True)
     print(f" Dataset: {dataset_name} | Method: {method} | Epochs: {epochs}", flush=True)
     print(f"========================================================", flush=True)
@@ -314,11 +314,11 @@ def train_single_experiment(dataset_name, method, epochs, batch_size, lr, data_r
     elif m_lower == "m2_neutral":
         train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=False)
     elif m_lower == "m3_noise":
-        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=True, noise_type=noise_type, static_noise=static_noise)
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=False, noise_bg=True, noise_type=noise_type, static_noise=static_noise, shared_single_noise=shared_noise)
     elif m_lower == "m4_scale":
         train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=False)
     elif m_lower in ["m5_proposed", "proposed"]:
-        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type=noise_type, static_noise=static_noise)
+        train_ds = ForegroundNoiseDataset(train_base, target_size=32, margin=2, enlarge=True, noise_bg=True, noise_type=noise_type, static_noise=static_noise, shared_single_noise=shared_noise)
     else:
         # Baseline Plain* (standard augmentations without mixing)
         class StandardAugDataset(Dataset):
@@ -519,6 +519,10 @@ def main():
                         help="Hold background noise static across all epochs (default: True)")
     parser.add_argument("--dynamic-noise", action="store_false", dest="static_noise",
                         help="Regenerate dynamic noise on every epoch")
+    parser.add_argument("--shared-noise", action="store_true", default=True,
+                        help="Use ONE single noise canvas across all images and epochs (default: True)")
+    parser.add_argument("--per-sample-noise", action="store_false", dest="shared_noise",
+                        help="Use a separate static noise canvas per sample")
     args = parser.parse_args()
 
     os.makedirs(args.output_dir, exist_ok=True)
@@ -543,7 +547,8 @@ def main():
                 auto_push=args.auto_push,
                 log_interval=args.log_interval,
                 noise_type=args.noise_type,
-                static_noise=args.static_noise
+                static_noise=args.static_noise,
+                shared_noise=args.shared_noise
             )
             summary_results[ds][method] = res
 
