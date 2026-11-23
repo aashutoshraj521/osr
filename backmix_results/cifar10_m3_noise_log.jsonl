@@ -48,3 +48,13 @@
 {"epoch": 48, "train_loss": 0.3045, "epoch_time_sec": 20.6, "Accuracy": 53.52, "AUROC": 56.45, "TNR@95": 6.9, "OSCR": 34.5, "AUIN": 67.41, "AUOUT": 44.67}
 {"epoch": 49, "train_loss": 0.3086, "epoch_time_sec": 20.9, "Accuracy": 58.67, "AUROC": 58.52, "TNR@95": 7.3, "OSCR": 39.41, "AUIN": 68.88, "AUOUT": 46.02}
 {"epoch": 50, "train_loss": 0.3067, "epoch_time_sec": 21.0, "Accuracy": 55.03, "AUROC": 58.09, "TNR@95": 8.1, "OSCR": 36.84, "AUIN": 67.94, "AUOUT": 46.44}
+{"epoch": 51, "train_loss": 0.3016, "epoch_time_sec": 20.6, "Accuracy": 59.67, "AUROC": 59.05, "TNR@95": 7.4, "OSCR": 40.05, "AUIN": 69.46, "AUOUT": 46.71}
+{"epoch": 52, "train_loss": 0.2969, "epoch_time_sec": 20.7, "Accuracy": 52.9, "AUROC": 50.37, "TNR@95": 4.95, "OSCR": 32.31, "AUIN": 61.81, "AUOUT": 39.98}
+{"epoch": 53, "train_loss": 0.3021, "epoch_time_sec": 20.9, "Accuracy": 31.35, "AUROC": 56.23, "TNR@95": 6.73, "OSCR": 20.24, "AUIN": 66.44, "AUOUT": 44.66}
+{"epoch": 54, "train_loss": 0.292, "epoch_time_sec": 21.3, "Accuracy": 52.42, "AUROC": 57.18, "TNR@95": 8.12, "OSCR": 34.9, "AUIN": 67.51, "AUOUT": 45.69}
+{"epoch": 55, "train_loss": 0.296, "epoch_time_sec": 21.1, "Accuracy": 44.6, "AUROC": 62.05, "TNR@95": 8.58, "OSCR": 29.45, "AUIN": 72.75, "AUOUT": 48.59}
+{"epoch": 56, "train_loss": 0.2893, "epoch_time_sec": 21.3, "Accuracy": 59.15, "AUROC": 54.61, "TNR@95": 8.12, "OSCR": 37.63, "AUIN": 63.56, "AUOUT": 44.86}
+{"epoch": 57, "train_loss": 0.2816, "epoch_time_sec": 21.1, "Accuracy": 44.83, "AUROC": 40.39, "TNR@95": 2.88, "OSCR": 24.25, "AUIN": 54.18, "AUOUT": 33.83}
+{"epoch": 58, "train_loss": 0.274, "epoch_time_sec": 21.3, "Accuracy": 65.4, "AUROC": 54.66, "TNR@95": 8.65, "OSCR": 41.63, "AUIN": 63.2, "AUOUT": 44.94}
+{"epoch": 59, "train_loss": 0.2778, "epoch_time_sec": 20.9, "Accuracy": 50.77, "AUROC": 55.65, "TNR@95": 6.75, "OSCR": 30.19, "AUIN": 65.49, "AUOUT": 44.34}
+{"epoch": 60, "train_loss": 0.2766, "epoch_time_sec": 21.1, "Accuracy": 48.22, "AUROC": 53.8, "TNR@95": 5.83, "OSCR": 28.35, "AUIN": 63.33, "AUOUT": 43.03}
