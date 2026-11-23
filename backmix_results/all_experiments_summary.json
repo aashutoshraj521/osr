@@ -1,20 +1,20 @@
 {
   "cifar10": {
     "m3_noise": {
-      "Accuracy": 52.38,
-      "AUROC": 62.81,
-      "TNR@95": 12.8,
-      "OSCR": 37.61,
-      "AUIN": 72.41,
-      "AUOUT": 52.66
+      "Accuracy": 44.6,
+      "AUROC": 62.05,
+      "TNR@95": 8.58,
+      "OSCR": 29.45,
+      "AUIN": 72.75,
+      "AUOUT": 48.59
     },
     "m5_proposed": {
-      "Accuracy": 35.67,
-      "AUROC": 60.09,
-      "TNR@95": 6.95,
-      "OSCR": 23.74,
-      "AUIN": 70.3,
-      "AUOUT": 46.7
+      "Accuracy": 62.88,
+      "AUROC": 54.11,
+      "TNR@95": 5.55,
+      "OSCR": 41.01,
+      "AUIN": 65.79,
+      "AUOUT": 42.43
     }
   }
 }
