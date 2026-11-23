@@ -27,13 +27,13 @@
     "time_sec": 104.4
   },
   "m3_noise": {
-    "Accuracy": 21.13,
-    "AUROC": 57.55,
-    "TNR@95": 7.98,
-    "OSCR": 13.33,
-    "AUIN": 66.63,
-    "AUOUT": 46.39,
-    "time_sec": 106.1
+    "Accuracy": 33.83,
+    "AUROC": 56.08,
+    "TNR@95": 8.62,
+    "OSCR": 21.7,
+    "AUIN": 65.14,
+    "AUOUT": 45.79,
+    "time_sec": 9.37
   },
   "m4_scale": {
     "Accuracy": 45.57,
@@ -45,12 +45,12 @@
     "time_sec": 106.8
   },
   "m5_proposed": {
-    "Accuracy": 22.93,
-    "AUROC": 43.38,
-    "TNR@95": 4.28,
-    "OSCR": 12.01,
-    "AUIN": 55.12,
-    "AUOUT": 36.68,
-    "time_sec": 105.6
+    "Accuracy": 35.98,
+    "AUROC": 46.58,
+    "TNR@95": 3.82,
+    "OSCR": 20.24,
+    "AUIN": 58.59,
+    "AUOUT": 37.57,
+    "time_sec": 9.09
   }
 }
