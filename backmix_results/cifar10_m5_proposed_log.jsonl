@@ -48,3 +48,13 @@
 {"epoch": 48, "train_loss": 0.3433, "epoch_time_sec": 24.2, "Accuracy": 48.77, "AUROC": 42.67, "TNR@95": 2.15, "OSCR": 28.0, "AUIN": 58.52, "AUOUT": 34.09}
 {"epoch": 49, "train_loss": 0.3448, "epoch_time_sec": 23.5, "Accuracy": 40.92, "AUROC": 40.37, "TNR@95": 2.2, "OSCR": 22.77, "AUIN": 57.94, "AUOUT": 33.12}
 {"epoch": 50, "train_loss": 0.3338, "epoch_time_sec": 23.8, "Accuracy": 53.3, "AUROC": 46.84, "TNR@95": 3.6, "OSCR": 32.2, "AUIN": 61.26, "AUOUT": 37.04}
+{"epoch": 51, "train_loss": 0.3237, "epoch_time_sec": 23.5, "Accuracy": 49.27, "AUROC": 45.41, "TNR@95": 3.48, "OSCR": 28.17, "AUIN": 60.01, "AUOUT": 36.26}
+{"epoch": 52, "train_loss": 0.3101, "epoch_time_sec": 23.7, "Accuracy": 52.23, "AUROC": 47.8, "TNR@95": 2.9, "OSCR": 32.9, "AUIN": 62.36, "AUOUT": 36.73}
+{"epoch": 53, "train_loss": 0.3014, "epoch_time_sec": 23.8, "Accuracy": 44.22, "AUROC": 46.7, "TNR@95": 2.55, "OSCR": 28.3, "AUIN": 61.17, "AUOUT": 35.97}
+{"epoch": 54, "train_loss": 0.2895, "epoch_time_sec": 23.8, "Accuracy": 42.05, "AUROC": 44.53, "TNR@95": 3.12, "OSCR": 25.64, "AUIN": 60.0, "AUOUT": 35.5}
+{"epoch": 55, "train_loss": 0.2861, "epoch_time_sec": 23.6, "Accuracy": 59.87, "AUROC": 47.29, "TNR@95": 2.8, "OSCR": 35.39, "AUIN": 61.51, "AUOUT": 36.82}
+{"epoch": 56, "train_loss": 0.2804, "epoch_time_sec": 23.5, "Accuracy": 59.58, "AUROC": 50.69, "TNR@95": 4.15, "OSCR": 36.85, "AUIN": 62.5, "AUOUT": 39.44}
+{"epoch": 57, "train_loss": 0.2729, "epoch_time_sec": 23.7, "Accuracy": 51.65, "AUROC": 45.07, "TNR@95": 1.95, "OSCR": 30.69, "AUIN": 59.49, "AUOUT": 35.16}
+{"epoch": 58, "train_loss": 0.2647, "epoch_time_sec": 23.6, "Accuracy": 53.7, "AUROC": 48.36, "TNR@95": 4.35, "OSCR": 33.0, "AUIN": 62.07, "AUOUT": 38.24}
+{"epoch": 59, "train_loss": 0.259, "epoch_time_sec": 23.7, "Accuracy": 45.03, "AUROC": 40.68, "TNR@95": 2.02, "OSCR": 25.34, "AUIN": 57.81, "AUOUT": 33.44}
+{"epoch": 60, "train_loss": 0.2532, "epoch_time_sec": 23.6, "Accuracy": 52.02, "AUROC": 46.76, "TNR@95": 2.1, "OSCR": 31.62, "AUIN": 61.39, "AUOUT": 36.31}
