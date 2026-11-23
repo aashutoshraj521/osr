@@ -1,0 +1,56 @@
+{
+  "plain": {
+    "Accuracy": 57.05,
+    "AUROC": 56.94,
+    "TNR@95": 5.9,
+    "OSCR": 38.11,
+    "AUIN": 67.6,
+    "AUOUT": 44.09,
+    "time_sec": 104.7
+  },
+  "backmix": {
+    "Accuracy": 64.83,
+    "AUROC": 61.72,
+    "TNR@95": 6.93,
+    "OSCR": 46.42,
+    "AUIN": 72.57,
+    "AUOUT": 47.28,
+    "time_sec": 108.9
+  },
+  "m2_neutral": {
+    "Accuracy": 43.55,
+    "AUROC": 55.71,
+    "TNR@95": 6.28,
+    "OSCR": 27.79,
+    "AUIN": 66.34,
+    "AUOUT": 43.99,
+    "time_sec": 106.3
+  },
+  "m3_noise": {
+    "Accuracy": 28.3,
+    "AUROC": 53.17,
+    "TNR@95": 7.45,
+    "OSCR": 17.12,
+    "AUIN": 63.66,
+    "AUOUT": 42.9,
+    "time_sec": 107.0
+  },
+  "m4_scale": {
+    "Accuracy": 73.92,
+    "AUROC": 62.12,
+    "TNR@95": 9.75,
+    "OSCR": 51.58,
+    "AUIN": 72.45,
+    "AUOUT": 49.37,
+    "time_sec": 108.2
+  },
+  "m5_proposed": {
+    "Accuracy": 23.35,
+    "AUROC": 54.13,
+    "TNR@95": 5.22,
+    "OSCR": 14.02,
+    "AUIN": 64.77,
+    "AUOUT": 42.24,
+    "time_sec": 125.0
+  }
+}
